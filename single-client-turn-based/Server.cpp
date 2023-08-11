@@ -89,11 +89,16 @@ int main(int argc, char *argv[]) {
     */
     if (listen(sock_file_descriptor, MAX_CONNECTIONS) == SOCKET_LISTEN_ERROR) {
         error("Error while listening for connections!");
-        return -1;
+        exit(EXIT_FAILURE);
+    } else {
+        printf("Started listening on local port : %d\n", port_number);
     };
 
     client_length = sizeof(client_address);
- 
+    
+    // The accept() function shall extract the first connection on the queue of pending connections, 
+    // create a new socket with the same socket type protocol and address family as the specified socket,
+    //  and allocate a new file descriptor for that socket.
     newsock_file_descriptor = accept(sock_file_descriptor, (struct sockaddr *) &client_address, &client_length);
 
     if (newsock_file_descriptor < 0) {
