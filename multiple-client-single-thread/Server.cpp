@@ -15,13 +15,13 @@
 #include <unistd.h> // standard symbolic constants and types  ( for read, write, close )
 
 #ifdef WINDOWS_OS
-#include <windows.h>
+    #include <windows.h>
 #else
-#include <sys/socket.h> // contains sockets definitions
-#include <netinet/in.h> // contains definitions for the internet protocol family.
-#include <arpa/inet.h>  // contains definitions for internet operations
-#include <netdb.h>      // contains definitions for network database operations.
-#include <pthread.h>    // contains function declarations and mappings for threading interfaces and defines a number of constants used by those functions.
+    #include <sys/socket.h> // contains sockets definitions
+    #include <netinet/in.h> // contains definitions for the internet protocol family.
+    #include <arpa/inet.h>  // contains definitions for internet operations
+    #include <netdb.h>      // contains definitions for network database operations.
+    #include <pthread.h>    // contains function declarations and mappings for threading interfaces and defines a number of constants used by those functions.
 #endif
 #include <sys/time.h>   // time types
 #include <sys/select.h> // timeval type and select function
@@ -36,43 +36,85 @@
  * Helper functions for cross platform compatibility
  */
 #ifdef WINDOWS_OS
-void Cleanup() { WSACleanup(); }
 
-bool StartSocket()
-{
-    WORD Ver;
-    WSADATA wsd;
-    Ver = MAKEWORD(2, 2);
-    if (WSAStartup(Ver, &wsd) == SOCKET_ERROR)
+    int make_nonblocking(int file_descriptor)
     {
-        WSACleanup();
-        return false;
+        // Set socket to non-blocking
+        u_long mode = 1; // 0 for blocking and 1 for non-blocking ; By default socket is blocking
+        if (ioctlsocket(sock_file_descriptor, FIONBIO, &mode) != 0) {
+            printf("ioctlsocket failed\n");
+            closesocket(sock_file_descriptor);
+            WSACleanup();
+            return -1;
+        }
+        return 0;
     }
 
-    return true;
-}
+    void Cleanup() { WSACleanup(); }
 
-int SocketGetLastError()
-{
-    return WSAGetLastError();
-}
+    bool StartSocket()
+    {
+        WORD Ver;
+        WSADATA wsd;
+        Ver = MAKEWORD(2, 2);
+        if (WSAStartup(Ver, &wsd) == SOCKET_ERROR)
+        {
+            WSACleanup();
+            return false;
+        }
 
-int CloseSocket(SOCKET s)
-{
-    closesocket(s);
-    return 0;
-}
+        return true;
+    }
+
+    int SocketGetLastError()
+    {
+        return WSAGetLastError();
+    }
+
+    int CloseSocket(SOCKET s)
+    {
+        closesocket(s);
+        return 0;
+    }
 #else
-#define SOCKET_ERROR (-1)
-#define SOCKET int
-void Cleanup() {}
-bool StartSocket() { return true; }
-int SocketGetLastError() { return 0xFFFF; }
-int CloseSocket(int s)
-{
-    shutdown(s, 2);
-    return 0;
-}
+    #define SOCKET_ERROR (-1);
+    #define SOCKET int;
+
+    int make_nonblocking(int file_descriptor)
+    {
+        int flags = fcntl(file_descriptor, F_GETFL, 0);
+        if (flags == -1) {
+            printf("fcntl(F_GETFL) failed\n");
+            close(file_descriptor);
+            return -1;
+        }
+
+        flags |= O_NONBLOCK;
+        if (fcntl(file_descriptor, F_SETFL, flags) == -1) {
+            printf("fcntl(F_SETFL) failed\n");
+            close(file_descriptor);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    void Cleanup() {
+    }
+
+    bool StartSocket() { 
+        return true; 
+    }
+
+    int SocketGetLastError() { 
+        return 0xFFFF; 
+    }
+
+    int CloseSocket(int s)
+    {
+        shutdown(s, 2);
+        return 0;
+    }
 #endif
 
 // Socket address, internet style.
@@ -223,6 +265,7 @@ int main(int argc, char *argv[])
     server_address.sin_addr.s_addr = INADDR_ANY;
     server_address.sin_port = htons(port_number); // host to network short
 
+#ifndef WINDOWS_OS
     /**
      * Set socket options
      */
@@ -238,6 +281,7 @@ int main(int argc, char *argv[])
         Cleanup();
         exit(EXIT_FAILURE);
     };
+#endif
 
     /**
      * Bind the socket to server_address
@@ -266,30 +310,7 @@ int main(int argc, char *argv[])
     /**
      * Set Non Blocking Socket
      */
-    // #ifdef WINDOWS_OS
-    //     // Set socket to non-blocking
-    //     u_long mode = 1; // 0 for blocking and 1 for non-blocking ; By default socket is blocking
-    //     if (ioctlsocket(sock_file_descriptor, FIONBIO, &mode) != 0) {
-    //         printf("ioctlsocket failed\n");
-    //         closesocket(sock_file_descriptor);
-    //         WSACleanup();
-    //         return 1;
-    //     }
-    // #else
-    //     int flags = fcntl(sock_file_descriptor, F_GETFL, 0);
-    //     if (flags == -1) {
-    //         printf("fcntl(F_GETFL) failed\n");
-    //         close(sock_file_descriptor);
-    //         return 1;
-    //     }
-
-    //     flags |= O_NONBLOCK;
-    //     if (fcntl(sock_file_descriptor, F_SETFL, flags) == -1) {
-    //         printf("fcntl(F_SETFL) failed\n");
-    //         close(sock_file_descriptor);
-    //         return 1;
-    //     }
-    // #endif
+    make_nonblocking(sock_file_descriptor);
 
     // The max file descriptor would be the server socket file descriptor, since the new accepted connections will starting from server socket file descriptor + 1
     int max_file_descriptor = sock_file_descriptor;
