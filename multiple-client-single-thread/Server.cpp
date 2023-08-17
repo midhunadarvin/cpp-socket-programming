@@ -36,7 +36,7 @@
  * Helper functions for cross platform compatibility
  */
 #ifdef WINDOWS_OS
-
+    #define SOCKET int;
     int make_nonblocking(int file_descriptor)
     {
         // Set socket to non-blocking
@@ -180,7 +180,13 @@ void processRequest()
     {
         printf("Checking for server socket messages...\n");
         client_length = sizeof(client_address);
-        int client_socket_file_descriptor = accept(sock_file_descriptor, (struct sockaddr *)&client_address, &client_length);
+
+        #ifdef WINDOWS_OS
+            SOCKET client_socket_file_descriptor = accept(sock_file_descriptor, (struct sockaddr *)&client_address, (int *)&client_length);
+        #else
+            int client_socket_file_descriptor = accept(sock_file_descriptor,
+                                       (struct sockaddr *)&client_address, (socklen_t *)&client_length);
+        #endif
 
         printf("number of clients : %d\n", num_of_clients);
         int i;
