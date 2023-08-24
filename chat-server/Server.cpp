@@ -15,7 +15,7 @@
 #include <unistd.h> // standard symbolic constants and types  ( for read, write, close )
 #include <map>
 #include <string>
-#include <iostream>
+#include <iostream> // standard input-output stream, contains utilities for dealing with input / output and streams
 #include <utility>
 
 #ifdef WINDOWS_OS
