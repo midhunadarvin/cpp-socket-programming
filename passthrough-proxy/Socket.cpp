@@ -46,9 +46,11 @@
 #include <sys/time.h>
 #include <sys/ioctl.h>
 #endif
+#include <sys/select.h>
 
 int Socket::nofSockets_ = 0;
 
+typedef unsigned long u_long;
 #define INVALID_SOCKET (-1)
 #define SOCKET_ERROR (-1)
 

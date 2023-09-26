@@ -36,6 +36,7 @@
 #include <pthread.h>  // contains function declarations and mappings for threading interfaces and defines a number of constants used by those functions.
 #endif
 #include <sstream>    // provides templates and types that enable interoperation between stream buffers and string objects
+#include <sys/select.h>
 
 int proxy_port;
 std::string server_addr;

@@ -36,6 +36,7 @@
     #include <arpa/inet.h>
     #include <unistd.h>
 #endif
+#include <sys/select.h>
 
 #include <string>
 

@@ -28,6 +28,7 @@
 #include <sys/select.h> // timeval type and select function
 #include <fcntl.h>      // Defines file control options. ( linux )
 
+typedef unsigned long u_long
 #define INVALID_SOCKET (-1)
 
 /**
