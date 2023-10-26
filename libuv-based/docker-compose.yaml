@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  libuv-proxy:  
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_FILE_URL: https://gist.githubusercontent.com/midhunadarvin/0e0b38927571816c73b72adfa92978bb/raw/b3ca9a8b3f3b5150e55ec9716ec167fcda7deebd/config.xml
+    networks:
+      - backend
+    links:
+      - "clickhouse-1:database"
+
+  clickhouse-1:
+    image: clickhouse/clickhouse-server:22.6
+    expose:
+      - "9000"
+      - "9440"
+      - "8123"
+      - "8443"
+    ports:
+      - "9000:9000"
+      - "9440:9440"
+      - "8123:8123"
+      - "8443:8443"
+    networks:
+      - backend
+
+networks:
+    backend:
+      driver: bridge
+      driver_opts:
+        com.docker.network.driver.mtu: 1400
+      
