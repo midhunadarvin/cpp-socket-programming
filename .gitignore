@@ -4,3 +4,5 @@
 .DS_Store
 */build
 libuv-based/libuv
+.idea
+cmake-build-debug
