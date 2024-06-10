@@ -28,7 +28,7 @@
 #include <sys/select.h> // timeval type and select function
 #include <fcntl.h>      // Defines file control options. ( linux )
 
-typedef unsigned long u_long
+typedef unsigned long u_long;
 #define INVALID_SOCKET (-1)
 
 /**
@@ -204,7 +204,7 @@ void processRequest(int client_socket_file_descriptor)
         std::lock_guard<std::mutex> lock(client_messages_queue_mutex);
         printf("There are messages in queue that are to be written to the file_descriptor: %d\n", client_socket_file_descriptor);
         char *message = (char *)(client_messages_queue[client_socket_file_descriptor]).c_str();
-        printf("Message : %s\n", message);
+        printf("Message : %s \n", message);
         sendRequest(client_socket_file_descriptor, message);
         client_messages_queue.erase(client_socket_file_descriptor);
     }

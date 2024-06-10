@@ -44,7 +44,7 @@ bool CClientSocket::Connect()
     Resolve(host);
 
     // Step 4
-    std::string message = "CClientSocket INFO IP address of " + std::string(m_HostPointer->h_name) + " is: " + std::string(inet_ntoa(*(struct in_addr *)m_HostPointer->h_addr)) ;
+    std::string message = "CClientSocket INFO IP address of " + std::string(m_HostPointer->h_name) + " is: " + std::string(inet_ntoa(*(struct in_addr *)m_HostPointer->h_addr));
     std::cout << message << std::endl;
 
     sockaddr_in addr;
@@ -55,7 +55,9 @@ bool CClientSocket::Connect()
 
     if (::connect(s_, (sockaddr *)&addr, sizeof(sockaddr)))
     {
-        std::cout << "CClientSocket " << "ERROR " << "Unable to connect to the host endpoint " << std::endl;
+        std::cout << "CClientSocket "
+                  << "ERROR "
+                  << "Unable to connect to the host endpoint " << std::endl;
 #if WINDOWS_OS
         error = strerror(WSAGetLastError());
 #else
@@ -70,7 +72,8 @@ bool CClientSocket::Connect()
     return true;
 }
 
-bool CClientSocket::Reconnect() {
+bool CClientSocket::Reconnect()
+{
     Close();
     CreateSocket();
     Connect();
@@ -119,4 +122,3 @@ bool CClientSocket::Resolve(const std::string &host)
         return true;
     }
 }
-

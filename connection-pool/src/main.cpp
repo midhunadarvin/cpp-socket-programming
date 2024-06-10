@@ -1,3 +1,7 @@
+/**
+ * 
+ * Build : g++ main.cpp -o main.exe
+*/
 #include <iostream>
 #include <sstream> // provides templates and types that enable interoperation between stream buffers and string objects
 #include "../test/tests.h"

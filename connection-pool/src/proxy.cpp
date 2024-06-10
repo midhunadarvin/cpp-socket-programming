@@ -2,7 +2,7 @@
    proxy.cpp
 */
 
-// Build : g++ Proxy.cpp Socket.cpp -o Proxy.exe
+// Build : g++ proxy.cpp -o proxy.exe
 // Run   : ./Proxy.exe <proxy-port> <server-host> <server-port>
 
 #include "socket/Socket.h"

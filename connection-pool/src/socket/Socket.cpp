@@ -158,7 +158,6 @@ void Socket::CreateSocket() {
     {
         throw std::runtime_error("INVALID_SOCKET");
     }
-
 }
 
 /**
