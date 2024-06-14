@@ -20,7 +20,7 @@ all: $(TARGET)
 # Link the object files to create the executable
 $(TARGET): $(OBJS)
 	@mkdir -p $(BIN_DIR)
-	$(CXX) $(OBJS) -lsqlite3 -o $(TARGET)
+	$(CXX) $(OBJS) -lsqlite3 -lpthread -o $(TARGET)
 
 # Compile .cpp files to .o files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp

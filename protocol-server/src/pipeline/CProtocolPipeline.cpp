@@ -1,14 +1,14 @@
 #include "CProtocolPipeline.h"
 
 extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
-    printf("Starting ProtocolPipeline");
+    LOG_INFO("Starting ProtocolPipeline");
     CLIENT_DATA clientData;
     memcpy(&clientData, lptr, sizeof(CLIENT_DATA));
 
     // Check if handler is defined
     CProtocolHandler *protocol_handler = ptr->GetHandler();
     if (protocol_handler == nullptr) {
-        printf("The handler is not defined. Exiting!");
+        LOG_ERROR("The handler is not defined. Exiting!");
         return nullptr;
     }
     auto *client_socket = (Socket *) clientData.client_socket;
@@ -26,11 +26,11 @@ extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
 
 			try {
 				if (sel.Readable(client_socket)) {
-					printf("client socket is readable, reading bytes : ");
+					LOG_INFO("client socket is readable, reading bytes : ");
 					std::string bytes = client_socket->ReceiveBytes();
 
 					if (!bytes.empty()) {
-						printf("Calling Protocol Handler..");
+						LOG_INFO("Calling Protocol Handler..");
 						request += bytes;
 					}
 					if (bytes.empty())
@@ -43,8 +43,8 @@ extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
 				}
 			}
 			catch (std::exception &e) {
-				printf("Error while sending to target :");
-				printf("%s", e.what());
+				LOG_ERROR("Error while sending to target :");
+				LOG_ERROR(e.what());
 			}
 
 			if (!still_connected) {
@@ -52,8 +52,8 @@ extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
 			}
         }
         catch (std::exception &e) {
-            printf("%s", e.what());
-            printf("error occurred while creating socket select ");
+            LOG_ERROR(e.what());
+            LOG_ERROR("error occurred while creating socket select ");
         }
     }
 
@@ -63,7 +63,7 @@ extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
     }
 
     // Close the client socket
-    printf("Closing the client socket");
+    LOG_INFO("Closing the client socket");
     client_socket->Close();
 
 #ifdef WINDOWS_OS

@@ -43,6 +43,7 @@
 #include <sys/select.h>
 #include <string>
 #include <iostream>
+#include <functional>
 
 enum TypeSocket {
     BlockingSocket,

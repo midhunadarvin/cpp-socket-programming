@@ -5,7 +5,6 @@
 //
 #include "CServerSocket.h"
 #include "ProtocolHelper.h"
-#include <utility>
 
 /**
  * CServerSocket - Constructor
