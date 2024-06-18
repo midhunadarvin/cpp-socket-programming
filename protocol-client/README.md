@@ -20,21 +20,12 @@ Run the protocol client :
 
 ### Test
 
-```
-curl http://localhost:8080 -v
-```
-
 You should get the response as shown below :
 ```
-* Connected to localhost (127.0.0.1) port 8080
-> GET / HTTP/1.1
-> Host: localhost:8080
-> User-Agent: curl/8.7.1
-> Accept: */*
->
-* Request completely sent off
-< HTTP/1.1 200 OK
-* Connection #0 to host localhost left intact
+[src/main.cpp line:12] INFO Hello world!
+[src/main.cpp line:28] INFO Resolved (Target) Host: localhost
+[src/main.cpp line:29] INFO Resolved (Target) Port: 8080
+IP address of localhost is: 127.0.0.1[src/main.cpp line:44] INFO HTTP/1.1 200 OK
 ```
 
 ### Clean
