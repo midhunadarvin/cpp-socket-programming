@@ -1,13 +1,6 @@
-# Simple Protocol Server
+# Simple Protocol Client
 
-This project can be used to quickly prototype a protocol server. 
-
-The flow of requests can be represented as shown below :
-```
-socket port <=> Pipeline <=> Handler
-```
-
-The author is required to make changes in the `pipeline` folder and the `handler` folder.
+This project can be used to quickly prototype a client application to a Protocol Server. 
 
 ### Build
 
@@ -16,8 +9,13 @@ make
 ```
 
 ### Run
+
+Go to the protocol-server folder, compile and run the protocol-server. The protocol server should be running on port 8080. 
+Ensure you are using the `SyncApiProtocolHandler` on the server to handle the payload synchronously.
+
+Run the protocol client :
 ```
-./bin/protocol_server
+./bin/protocol_client
 ```
 
 ### Test

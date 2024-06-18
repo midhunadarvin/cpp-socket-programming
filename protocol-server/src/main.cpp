@@ -1,5 +1,5 @@
 #include "engine/interface/CProtocolSocket.h"
-#include "handler/DefaultProtocolHandler.h"
+#include "handler/SyncApiProtocolHandler.h"
 #include "handler/SchedulerHandler.h"
 #include "pipeline/CProtocolPipeline.h"
 #include "pipeline/Pipeline.h"
@@ -17,7 +17,7 @@ int setupDefaultPipeline() {
     LOG_ERROR("Failed to set " + protocolName + " Pipeline ..!");
     return -2;
   }
-  auto *protocolHandler = new DefaultProtocolHandler();
+  auto *protocolHandler = new SyncApiProtocolHandler();
   if (protocolHandler) {
     if (!(*socket).SetHandler(protocolHandler)) {
       LOG_ERROR("Failed to set " + protocolName + " Handler ..!");

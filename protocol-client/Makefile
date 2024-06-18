@@ -8,7 +8,7 @@ CXXFLAGS := -Wall -Wextra -std=c++17 -DDEBUG -I./src
 SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
-TARGET := $(BIN_DIR)/protocol_server
+TARGET := $(BIN_DIR)/protocol_client
 
 # Find all .cpp files and their corresponding .o files
 SRCS := $(shell find $(SRC_DIR) -name '*.cpp')
