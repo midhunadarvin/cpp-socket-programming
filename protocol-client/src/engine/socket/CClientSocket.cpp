@@ -43,7 +43,7 @@ void CClientSocket::Connect()
     Resolve(host);
 
     // Step 4
-    printf( "%s", ("IP address of " + std::string(m_HostPointer->h_name) + " is: " + std::string(inet_ntoa(*(struct in_addr *)m_HostPointer->h_addr))).c_str() );
+    // LOG_INFO("IP address of " + std::string(m_HostPointer->h_name) + " is: " + std::string(inet_ntoa(*(struct in_addr *)m_HostPointer->h_addr)) );
 
     sockaddr_in addr;
     addr.sin_family = AF_INET;

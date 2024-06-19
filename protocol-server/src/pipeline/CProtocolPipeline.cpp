@@ -1,4 +1,5 @@
 #include "CProtocolPipeline.h"
+#include "../payload/Payload.h"
 
 extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
     LOG_INFO("Starting ProtocolPipeline");
@@ -59,6 +60,9 @@ extern "C" void *CProtocolPipeline(CProtocolSocket *ptr, void *lptr) {
 
     if (!request.empty()) {
         response = protocol_handler->HandleData(request, request.size(), &exec_context);
+        std::cout << response.c_str() << std::endl;
+        CONNECT_RESPONSE_PACKET * packet = (CONNECT_RESPONSE_PACKET *) response.c_str();
+        LOG_INFO(packet->task_id);
         client_socket->SendBytes((char *) response.c_str(), response.size());
     }
 
